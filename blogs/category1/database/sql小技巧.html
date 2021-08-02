@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="en-US">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+    <title>mysql小技巧</title>
+    <meta name="generator" content="VuePress 1.8.2">
+    
+    <meta name="description" content="">
+    
+    <link rel="preload" href="/assets/css/0.styles.495d9abf.css" as="style"><link rel="preload" href="/assets/js/app.38913cdc.js" as="script"><link rel="preload" href="/assets/js/2.934fa2b0.js" as="script"><link rel="preload" href="/assets/js/13.335253c7.js" as="script"><link rel="prefetch" href="/assets/js/10.53b60bd5.js"><link rel="prefetch" href="/assets/js/11.1b45cdaa.js"><link rel="prefetch" href="/assets/js/12.56435465.js"><link rel="prefetch" href="/assets/js/14.5e742937.js"><link rel="prefetch" href="/assets/js/15.e0913bd6.js"><link rel="prefetch" href="/assets/js/16.95aecd18.js"><link rel="prefetch" href="/assets/js/17.2e8c7b7a.js"><link rel="prefetch" href="/assets/js/18.89b07ee7.js"><link rel="prefetch" href="/assets/js/19.fe7b0722.js"><link rel="prefetch" href="/assets/js/20.e68ce7c1.js"><link rel="prefetch" href="/assets/js/21.2f658ce0.js"><link rel="prefetch" href="/assets/js/22.1768b904.js"><link rel="prefetch" href="/assets/js/23.13ca1345.js"><link rel="prefetch" href="/assets/js/24.dc77ea1c.js"><link rel="prefetch" href="/assets/js/25.374c2a32.js"><link rel="prefetch" href="/assets/js/3.a5908186.js"><link rel="prefetch" href="/assets/js/4.4c4c219e.js"><link rel="prefetch" href="/assets/js/5.c31107b6.js"><link rel="prefetch" href="/assets/js/6.004ca1a2.js"><link rel="prefetch" href="/assets/js/7.99b7f00d.js"><link rel="prefetch" href="/assets/js/8.897b2bef.js"><link rel="prefetch" href="/assets/js/9.04d75507.js">
+    <link rel="stylesheet" href="/assets/css/0.styles.495d9abf.css">
+  </head>
+  <body>
+    <div id="app" data-server-rendered="true"><div class="theme-container"><header class="navbar"><div class="sidebar-button"><svg xmlns="http://www.w3.org/2000/svg" aria-hidden="true" role="img" viewBox="0 0 448 512" class="icon"><path fill="currentColor" d="M436 124H12c-6.627 0-12-5.373-12-12V80c0-6.627 5.373-12 12-12h424c6.627 0 12 5.373 12 12v32c0 6.627-5.373 12-12 12zm0 160H12c-6.627 0-12-5.373-12-12v-32c0-6.627 5.373-12 12-12h424c6.627 0 12 5.373 12 12v32c0 6.627-5.373 12-12 12zm0 160H12c-6.627 0-12-5.373-12-12v-32c0-6.627 5.373-12 12-12h424c6.627 0 12 5.373 12 12v32c0 6.627-5.373 12-12 12z"></path></svg></div> <a href="/" class="home-link router-link-active"></a> <div class="links"><div class="search-box"><input aria-label="Search" autocomplete="off" spellcheck="false" value=""> <!----></div> <!----></div></header> <div class="sidebar-mask"></div> <aside class="sidebar"><!---->  <ul class="sidebar-links"><li><section class="sidebar-group depth-0"><p class="sidebar-heading open"><span>mysql小技巧</span> <!----></p> <!----></section></li></ul> </aside> <main class="page"> <div class="theme-default-content content__default"><h1 id="sql小技巧"><a href="#sql小技巧" class="header-anchor">#</a> Sql小技巧</h1> <blockquote><p>快速的对比出两个表不同的数据</p></blockquote> <div class="language-mysql extra-class"><pre class="language-text"><code>select * from B where (select count(1) from A where A.ID = B.ID) = 0
+</code></pre></div><blockquote><p>清空数据并将自增id重置为0</p></blockquote> <div class="language-sql extra-class"><pre class="language-sql"><code>
+<span class="token keyword">TRUNCATE</span> <span class="token keyword">TABLE</span> questions RESTART <span class="token keyword">IDENTITY</span> <span class="token keyword">CASCADE</span><span class="token punctuation">;</span>
+</code></pre></div><div class="language-sql extra-class"><pre class="language-sql"><code><span class="token comment">---添加字段</span>
+mysql
+<span class="token keyword">ALTER</span> <span class="token keyword">TABLE</span> stats_report_permission <span class="token keyword">ADD</span> edit <span class="token keyword">INT</span> <span class="token operator">NOT</span> <span class="token boolean">NULL</span> <span class="token keyword">DEFAULT</span> <span class="token number">0</span> <span class="token keyword">COMMENT</span> <span class="token string">'验收编辑限制 0-无；1-采集时间结束后才能在平台编辑'</span><span class="token punctuation">;</span> 
+
+pgsql
+<span class="token keyword">ALTER</span>  <span class="token keyword">table</span> <span class="token keyword">public</span><span class="token punctuation">.</span>stats_report_permission <span class="token keyword">ADD</span> <span class="token keyword">COLUMN</span> edit int2 <span class="token keyword">DEFAULT</span> <span class="token boolean">null</span><span class="token punctuation">;</span>
+<span class="token keyword">COMMENT</span> <span class="token keyword">ON</span> <span class="token keyword">COLUMN</span> <span class="token keyword">public</span><span class="token punctuation">.</span>stats_report_permission<span class="token punctuation">.</span>edit <span class="token operator">IS</span> <span class="token string">'验收编辑限制 0-无；1-采集时间结束后才能在平台编辑'</span><span class="token punctuation">;</span>
+
+
+<span class="token keyword">ALTER</span>  <span class="token keyword">table</span> <span class="token keyword">public</span><span class="token punctuation">.</span>stats_respondent_manage <span class="token keyword">ADD</span> <span class="token keyword">COLUMN</span> object_status int2 <span class="token keyword">DEFAULT</span> <span class="token number">0</span><span class="token punctuation">;</span>
+<span class="token keyword">COMMENT</span> <span class="token keyword">ON</span> <span class="token keyword">COLUMN</span> <span class="token keyword">public</span><span class="token punctuation">.</span>stats_respondent_manage<span class="token punctuation">.</span>object_status <span class="token operator">IS</span> <span class="token string">'调查对象状态 0-关闭；1-开启'</span><span class="token punctuation">;</span>
+
+
+
+
+<span class="token comment">--修改字段的类型</span>
+<span class="token keyword">ALTER</span> <span class="token keyword">TABLE</span> <span class="token keyword">public</span><span class="token punctuation">.</span>stats_report_permission
+   <span class="token keyword">ALTER</span> <span class="token keyword">COLUMN</span> valid_day <span class="token keyword">TYPE</span> <span class="token keyword">character</span> <span class="token keyword">varying</span><span class="token punctuation">(</span><span class="token number">16</span><span class="token punctuation">)</span> <span class="token keyword">USING</span> <span class="token punctuation">(</span>valid_day::<span class="token keyword">character</span> <span class="token keyword">varying</span><span class="token punctuation">(</span><span class="token number">16</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+
+
+</code></pre></div><p>::: theorem
+如果更改的数据只有两种类型时，比如想将男性别全部改成女性别，可以使用这样的sql来实现
+:::</p> <div class="language-sql extra-class"><pre class="language-sql"><code><span class="token keyword">update</span> teacher <span class="token keyword">SET</span> sex <span class="token operator">=</span> <span class="token keyword">if</span><span class="token punctuation">(</span>sex <span class="token operator">=</span> <span class="token number">1</span><span class="token punctuation">,</span><span class="token number">2</span><span class="token punctuation">,</span><span class="token number">1</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+</code></pre></div></div> <footer class="page-edit"><!----> <!----></footer> <!----> </main></div><div class="global-ui"></div></div>
+    <script src="/assets/js/app.38913cdc.js" defer></script><script src="/assets/js/2.934fa2b0.js" defer></script><script src="/assets/js/13.335253c7.js" defer></script>
+  </body>
+</html>
